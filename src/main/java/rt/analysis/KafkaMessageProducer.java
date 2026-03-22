@@ -4,39 +4,40 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+import rt.analysis.pojo.StockData;
 import tools.jackson.databind.ObjectMapper;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Properties;
-
+@Component
 public class KafkaMessageProducer {
-    private KafkaProducer<String, String> producer;
+    @Autowired
+    private KafkaTemplate<String, String> producer;
+
+    @Value("${kafka-topic}")
     private String topic;
-    public KafkaMessageProducer(String brokers, String topic) {
-        Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        this.producer = new KafkaProducer<>(props);
-        this.topic = topic;
+
+    ObjectMapper objectMapper;
+
+    public KafkaMessageProducer() {
+        this.objectMapper = new ObjectMapper();
     }
-    public void produceMessage(String key, Object message) {
+    public void produceMessage(List<StockData> messages) {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonMessage = objectMapper.writeValueAsString(message);
-            ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, jsonMessage);
-            producer.send(record, (metadata, exception) -> {
-                if (exception == null) {
-                    System.out.println("Message sent successfully: " + metadata.toString());
-                } else {
-                    exception.printStackTrace();
-                }
-            });
+            for(StockData message:messages)
+            {
+                String jsonMessage = objectMapper.writeValueAsString(message);
+                ProducerRecord<String, String> record = new ProducerRecord<>(topic, message.getName()+ LocalDateTime.now().toString(), jsonMessage);
+                producer.send(record);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void close() {
-        producer.close();
-    }
 }

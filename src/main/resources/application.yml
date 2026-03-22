@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: RealTimeAnalysis
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      batch-size: 32768
+      linger-ms: 10
+      buffer-memory: 67108864
+      acks: 1
+
+kafka-topic: sp-ingest-trade-value
+
