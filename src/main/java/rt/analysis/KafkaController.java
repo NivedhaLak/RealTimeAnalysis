@@ -1,6 +1,7 @@
 package rt.analysis;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,23 +14,19 @@ public class KafkaController {
 
     @Autowired
     KafkaDataService kafkaDataService;
-
     @Autowired
     KafkaMessageProducer kafkaMessageProducer;
+    @Autowired
+    KafkaMessageConsumer kafkaMessageConsumer;
 
-    @GetMapping("/welcome")
-    public String welcome(){
-        return "welcome to real time analysis";
+    @GetMapping("/realTimeGenerate")
+    public List<String> fetchData(){
+        List<String> stockData =kafkaMessageConsumer.consumeData();
+        return stockData;
     }
 
-    @GetMapping("/realTimeGenerate/{count}")
-    public String threadMonitor(@PathVariable int count){
-        List<StockData> stockData =kafkaDataService.createMessage(count);
-        if(stockData.isEmpty()){
-            return "Error while generating message";
-        }
-        kafkaMessageProducer.produceMessage(stockData);
-
-        return "Message generated";
+    @GetMapping("/batch/stockValue/{count}")
+    public String batchAsyncStockValue(@PathVariable int count) throws InterruptedException{
+        return kafkaMessageProducer.sendStockValuesInBatches(count);
     }
 }
