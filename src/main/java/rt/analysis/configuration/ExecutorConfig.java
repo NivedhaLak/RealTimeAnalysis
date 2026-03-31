@@ -14,8 +14,8 @@ public class ExecutorConfig {
     @Bean(destroyMethod = "shutdown")
     public ExecutorService executorService() {
         return new ThreadPoolExecutor(
-                5,
-                15,
+                7,
+                20,
                 50L, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<>(500),
                 new ThreadPoolExecutor.CallerRunsPolicy()

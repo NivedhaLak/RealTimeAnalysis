@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface KafkaDataService {
     public List<StockData> createMessage(int messageCount);
-    public List<StockData> createMessage(int startCount ,int endCount);
+    public List<StockData> createMessage(int startCount ,int endCount, int actualCount);
 }

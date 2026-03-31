@@ -6,9 +6,9 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      batch-size: 32768 #Each batch size
-      linger-ms: 10 #wait ms before sending batched data
-      buffer-memory: 99108864
+      batch-size: 131072 #Each batch size
+      linger-ms: 15 #wait ms before sending batched data
+      buffer-memory: 157286400
       compression-type: snappy #Compression types
       #Asnyc & Retry setting
       acks: 1 #send acknowledgement
