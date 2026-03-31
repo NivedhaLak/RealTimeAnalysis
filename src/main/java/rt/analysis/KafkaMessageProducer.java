@@ -86,24 +86,26 @@ public class KafkaMessageProducer {
             });
         } catch (Exception e) {
             throw e;
+
         }
     }
 
     public String sendStockValuesInBatches(int count) throws InterruptedException {
         long startTime = System.currentTimeMillis();
         String traceId = "stock_"+startTime;
-
+        int total_record=0;
         for (int i = 1; i <= (count / batch_size) + 1; i++) {
             int end = i * batch_size;
             end = end > count ? count : end;
             List<StockData> stockData = kafkaDataService.createMessage((i - 1) * batch_size, end);
+            total_record+=stockData.size();
             if (stockData.isEmpty()) {
                 return "Error while generating message";
             }
             this.produceMessageInBatchesAsync(stockData, traceId);
         }
         long endTime = System.currentTimeMillis();
-        log.info("Time taken to finish stock for count: " + count + ", in: "
+        log.info("Time taken to finish stock for count: " + count +",total stock generated: "+total_record+ ", in: "
                 + DateTimeHelper.getDifferenceInSecond(startTime, endTime) + "seconds, traceId: " +traceId);
         return "Message generated successfully";
     }

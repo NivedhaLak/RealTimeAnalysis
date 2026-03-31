@@ -25,7 +25,7 @@ public class KafkaController {
         return stockData;
     }
 
-    @GetMapping("/batch/stockValue/{count}")
+    @GetMapping("/stockValue/{count}")
     public String batchAsyncStockValue(@PathVariable int count) throws InterruptedException{
         return kafkaMessageProducer.sendStockValuesInBatches(count);
     }
