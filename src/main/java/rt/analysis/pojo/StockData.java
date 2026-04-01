@@ -13,6 +13,6 @@ public class StockData {
     private LocalDateTime settlementDate;
     private String currency;
     private double price;
-    private int volumn;
+    private int volume;
     private Country country;
 }

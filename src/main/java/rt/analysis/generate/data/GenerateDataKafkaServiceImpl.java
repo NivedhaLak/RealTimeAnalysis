@@ -1,4 +1,4 @@
-package rt.analysis;
+package rt.analysis.generate.data;
 
 import org.springframework.stereotype.Service;
 import rt.analysis.pojo.Country;
@@ -9,11 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
-public class KafkaDataServiceImpl implements KafkaDataService {
+public class GenerateDataKafkaServiceImpl implements GenerateDataKafkaService {
+    Logger logger = LoggerFactory.getLogger(GenerateDataKafkaServiceImpl.class);
 
     @Override
-    public List<StockData> createMessage(int startCount, int endCount, int actualCount) {
+    public List<StockData> generateMessage(int startCount, int endCount, int actualCount) {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         List<StockData> stockData = new ArrayList<>();
 
@@ -25,14 +29,17 @@ public class KafkaDataServiceImpl implements KafkaDataService {
                     .settlementDate(LocalDateTime.now().plusDays(random.nextInt(1, 5)))
                     .currency(country.getCurrencyCode())
                     .price(random.nextDouble(200.90, 3010.99))
-                    .country(country).volumn(random.nextInt(1500, 25000))
+                    .country(country).volume(random.nextInt(1500, 25000))
                     .build());
         }
+        logger.info("generate message success,count:{}",stockData.size());
         return stockData;
     }
 
     @Override
-    public List<StockData> createMessage(int messageCount) {
-        return createMessage(0, messageCount, messageCount);
+    public List<StockData> generateMessage(int messageCount) {
+        return generateMessage(0, messageCount, messageCount);
     }
+
+
 }

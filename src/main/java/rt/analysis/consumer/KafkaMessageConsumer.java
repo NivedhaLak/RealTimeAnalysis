@@ -1,13 +1,12 @@
-package rt.analysis;
+package rt.analysis.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import rt.analysis.pojo.StockData;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -49,6 +48,11 @@ public class KafkaMessageConsumer {
                 break;
         }
         return data;
+    }
+
+    @KafkaListener(topics = "", containerFactory = "batchFactory")
+    public void consume(List<String> messages){
+
     }
 
     {
