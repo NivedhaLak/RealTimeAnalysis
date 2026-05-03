@@ -25,3 +25,5 @@
 - **Time reduced:** 224s → 167s (~25% improvement)
 - **Throughput increased:** ~446K → ~598K msg/sec (~34% improvement)
 
+## Integrate AI MODEL For Stock Price Mismatch Alert
+https://github.com/NivedhaLak/AI_MODEL
